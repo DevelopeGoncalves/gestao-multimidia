@@ -27,7 +27,7 @@
             background-color: #0f172a;
             /* CONFIGURAÇÃO DA IMAGEM DE FUNDO GERAL (LOCAL) */
             background-image: url('img/fundo.jpg'); 
-            /* Fallback caso a imagem não exista: cor sólida ou gradiente */
+            /* Fallback caso a imagem não exista */
             background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('img/fundo.jpg');
             background-size: cover;
             background-position: center;
@@ -64,13 +64,19 @@
         .input-group { margin-bottom: 15px; position: relative; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); }
         
-        input {
+        input, select {
             width: 100%; padding: 14px 14px 14px 45px;
             background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             border-radius: 12px; color: white; outline: none; transition: 0.3s;
-            font-family: inherit;
+            font-family: inherit; font-size: 14px;
         }
-        input:focus { border-color: var(--theme-color); background: rgba(255,255,255,0.1); }
+        input:focus, select:focus { border-color: var(--theme-color); background: rgba(255,255,255,0.1); }
+        
+        /* Estilo específico para o select ficar bonito */
+        select {
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+        }
+        select option { background: #14141e; color: white; }
 
         /* --- BOTÕES --- */
         .btn {
@@ -86,7 +92,7 @@
         .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        /* --- MENU DE MINISTÉRIOS (CARDS COM IMAGEM LOCAL) --- */
+        /* --- MENU DE MINISTÉRIOS --- */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
         
         .card-menu {
@@ -118,7 +124,7 @@
         .card-title { font-weight: 700; font-size: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .card-sub { font-size: 11px; opacity: 0.8; }
 
-        /* --- TELA DE UPLOAD (HERO BANNER) --- */
+        /* --- TELA DE UPLOAD --- */
         #uploadScreen { padding: 0; } 
 
         .ministry-hero {
@@ -145,6 +151,9 @@
         }
         .back-btn:hover { background: white; color: black; }
 
+        /* Área de subpastas */
+        #subFolderArea { padding: 20px 30px 0 30px; display: none; }
+        
         .upload-content-body { padding: 30px; }
 
         .upload-zone {
@@ -216,6 +225,16 @@
                 </div>
             </div>
 
+            <div id="subFolderArea">
+                <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: block;">Destino do Arquivo:</label>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <select id="subFolderSelect" onchange="updateTargetFolder(this.value)">
+                        </select>
+                    <i class="fa-solid fa-chevron-down" style="left: auto; right: 15px; font-size: 12px;"></i>
+                </div>
+            </div>
+
             <div class="upload-content-body">
                 <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 32px; margin-bottom: 10px; color: var(--theme-color);"></i>
@@ -247,73 +266,90 @@
         // ==========================================
         // CONFIGURAÇÃO DO GOOGLE APPS SCRIPT
         // ==========================================
-        // Cole sua URL publicada abaixo (dentro das aspas):
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBVNFhCVMlQ9i818mLkFhPjIZmrktRYPMgCkC3p2S_HAHsIcqcapfTXdZfhf7O-Ec4/exec';
 
         // ==========================================
-        // CONFIGURAÇÃO DOS MINISTÉRIOS (IMAGENS LOCAIS)
+        // CONFIGURAÇÃO DOS MINISTÉRIOS
         // ==========================================
+        /* COMO ADICIONAR SUBPASTAS:
+           Adicione uma propriedade 'subFolders' com a lista de pastas.
+           Se 'subFolders' não existir, o sistema usa o 'folderId' padrão.
+        */
         const ministries = {
             'vencedores': { 
                 name: 'Vencedores', 
                 desc: 'Geração de Vencedores',
-                folderId: 'ID_PASTA_JOVENS', // ID do Drive
-                image: 'img/dna.jpg',     // Foto na pasta img
-                color: '#f59e0b',                // Cor Laranja/Dourada
+                folderId: 'ID_PASTA_VENCEDORES', 
+                image: 'img/dna.jpg',     
+                color: '#f59e0b',                
                 gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
             },
             'Auto de Páscoa': { 
                 name: 'Auto de Páscoa', 
-                desc: 'Geração de Vencedores',
-                folderId: 'ID_PASTA_JOVENS', // ID do Drive
-                image: 'img/pascoa.jpg',     // Foto na pasta img
-                color: '#f59e0b',                // Cor Laranja/Dourada
+                desc: 'Celebração da Vida',
+                folderId: 'ID_PASTA_PASCOA', 
+                image: 'img/pascoa.jpg',     
+                color: '#f59e0b',                
                 gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
             },
             'Batismo': { 
                 name: 'Batismo', 
-                desc: 'Batizar nas aguas',
-                folderId: 'ID_PASTA_JOVENS', // ID do Drive
-                image: 'img/batismo.jpg',     // Foto na pasta img
-                color: '#f59e0b',                // Cor Laranja/Dourada
+                desc: 'Batizar nas águas',
+                folderId: 'ID_PASTA_BATISMO', 
+                image: 'img/batismo.jpg',     
+                color: '#f59e0b',                
                 gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
             },
             'DNA': { 
                 name: 'DNA', 
-                desc: ' Ministério de Dança',
-                folderId: '1Qxc3BmDLo4zN_URuD3tQT_j-irX6l-66', // ID do Drive
-                image: 'img/dna.jpg',     // Foto na pasta img
-                color: '#f59e0b',                // Cor Laranja/Dourada
+                desc: 'Ministério de Dança',
+                folderId: '1Qxc3BmDLo4zN_URuD3tQT_j-irX6l-66', 
+                image: 'img/dna.jpg',     
+                color: '#f59e0b',                
                 gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
             },
             'jovens': { 
                 name: 'Jovens', 
                 desc: 'Força Jovem',
-                folderId: '1jl0Fp3ZEztzOCPZocxhLElXsl2N3O2rq',     // ID do Drive
-                image: 'img/jovens.jpg',         // Foto na pasta img
-                color: '#ef4444',                // Cor Vermelha
-                gradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)'
+                folderId: '1jl0Fp3ZEztzOCPZocxhLElXsl2N3O2rq',     
+                image: 'img/jovens.jpg',         
+                color: '#ef4444',                
+                gradient: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+                // EXEMPLO: Se quiser adicionar subpastas aqui no futuro, faça assim:
+                /*
+                subFolders: [
+                     { name: 'Geral', id: '1jl0Fp3ZEztzOCPZocxhLElXsl2N3O2rq' },
+                     { name: 'Retiro 2024', id: 'ID_DA_NOVA_PASTA' }
+                ]
+                */
             },
             'adolescentes': { 
                 name: 'Teen Hope', 
                 desc: 'Adolescentes Conectados',
-                folderId: '1wpY2ysmCedrJeh6eHC7GyLysi4Nnowzu', // ID do Drive
-                image: 'img/adolescentes.jpg',     // Foto na pasta img
-                color: '#8b5cf6',                  // Cor Roxa
+                folderId: '1wpY2ysmCedrJeh6eHC7GyLysi4Nnowzu', 
+                image: 'img/adolescentes.jpg',     
+                color: '#8b5cf6',                  
                 gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)'
             },
             'infantil': { 
                 name: 'Infantil', 
                 desc: 'Reino dos Pequenos',
-                folderId: '1QfXvByVMjf9DPRT6f46esJFlHTi9R4ck',   // ID do Drive
-                image: 'img/infantil.jpg',       // Foto na pasta img
-                color: '#06b6d4',                // Cor Azul/Ciano
-                gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)'
+                folderId: '1QfXvByVMjf9DPRT6f46esJFlHTi9R4ck', // ID caso dê algum erro
+                image: 'img/infantil.jpg',       
+                color: '#06b6d4',                
+                gradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                
+                // --- AQUI ESTÃO AS SUBPASTAS DO INFANTIL ---
+                subFolders: [
+                    { name: 'Pasta Geral', id: '1QfXvByVMjf9DPRT6f46esJFlHTi9R4ck' },
+                    { name: 'Retiro 2025', id: '1CpbpRqBn1X6FdWO3Qa7MMQSSpQ-p0nhM' }
+                ]
             }
         };
 
         let selectedFiles = [];
         let currentKey = '';
+        let currentUploadFolderId = '';
 
         // Inicializar Menu
         window.onload = function() { renderMinistryGrid(); };
@@ -357,7 +393,7 @@
             currentKey = key;
             const data = ministries[key];
 
-            // Muda Cores e Imagens
+            // Cores e Imagem
             const root = document.documentElement;
             root.style.setProperty('--theme-color', data.color);
             root.style.setProperty('--theme-gradient', data.gradient);
@@ -366,14 +402,42 @@
             document.getElementById('ministryTitle').innerText = data.name;
             document.getElementById('ministrySub').innerText = data.desc;
 
+            // --- LÓGICA DE SUBPASTAS ---
+            const subArea = document.getElementById('subFolderArea');
+            const subSelect = document.getElementById('subFolderSelect');
+
+            // Verifica se este ministério tem subpastas configuradas
+            if (data.subFolders && data.subFolders.length > 0) {
+                // Sim: Mostra o seletor
+                subArea.style.display = 'block';
+                subSelect.innerHTML = ''; 
+                
+                data.subFolders.forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub.id;
+                    option.text = sub.name;
+                    subSelect.appendChild(option);
+                });
+                // Define o destino inicial como a primeira opção
+                currentUploadFolderId = data.subFolders[0].id;
+            } else {
+                // Não: Esconde o seletor e usa o ID padrão
+                subArea.style.display = 'none';
+                currentUploadFolderId = data.folderId;
+            }
+
             selectedFiles = [];
             updateFileList();
             showScreen('uploadScreen');
         }
 
+        // Atualiza o ID quando o usuário muda o dropdown
+        function updateTargetFolder(newId) {
+            currentUploadFolderId = newId;
+        }
+
         function backToSelect() {
             showScreen('selectScreen');
-            // Reset visual opcional
             setTimeout(() => {
                 document.documentElement.style.setProperty('--theme-color', '#00d2ff');
                 document.documentElement.style.setProperty('--theme-gradient', 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)');
@@ -427,7 +491,7 @@
             pContainer.style.display = 'block';
 
             let successCount = 0;
-            const folderId = ministries[currentKey].folderId;
+            const folderId = currentUploadFolderId; // Usa o ID definido dinamicamente
 
             for(let i=0; i<selectedFiles.length; i++) {
                 const file = selectedFiles[i];

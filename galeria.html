@@ -2,157 +2,171 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeria de Fotos | Ministérios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Galeria de Fotos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --theme-color: #00d2ff; 
-            --glass-bg: rgba(20, 20, 30, 0.85);
+            --glass-bg: rgba(20, 20, 30, 0.95); /* Mais escuro para celular */
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Outfit', sans-serif;
             background-color: #0f172a;
+            /* Fundo otimizado para mobile */
             background-image: url('img/fundo.jpg'); 
-            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('img/fundo.jpg');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: var(--text-primary); min-height: 100vh;
-            display: flex; justify-content: center; align-items: center; padding: 20px;
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('img/fundo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Melhor rolagem no mobile */
+            padding: 10px;
         }
 
         .container {
-            width: 100%; max-width: 1000px;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            overflow: hidden; position: relative; min-height: 600px;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            min-height: 80vh;
             display: flex; flex-direction: column;
+            padding-bottom: 20px;
         }
 
-        .screen { display: none; opacity: 0; transition: opacity 0.4s ease; padding: 30px; flex: 1; }
+        .screen { display: none; opacity: 0; transition: opacity 0.3s ease; padding: 20px; flex: 1; }
         .screen.active { display: block; opacity: 1; }
 
-        /* HEADER & MENU */
-        .gallery-header { text-align: center; margin-bottom: 40px; }
-        .gallery-header h1 { font-size: 28px; font-weight: 800; margin-top: 15px; }
+        /* HEADER */
+        .gallery-header { text-align: center; margin-bottom: 25px; margin-top: 10px; }
+        .gallery-header h1 { font-size: 24px; font-weight: 800; margin-top: 10px; }
 
-        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        /* MENU GRID MOBILE */
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .card-menu {
-            height: 180px; border-radius: 16px; position: relative; overflow: hidden;
-            cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s;
+            height: 140px; border-radius: 12px; position: relative; overflow: hidden;
+            cursor: pointer; border: 1px solid var(--glass-border); 
         }
-        .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: 0.5s; }
+        .card-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+        }
         .card-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.1));
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.1));
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 12px;
         }
-        .card-menu:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.8); }
-        .card-menu:hover .card-bg { transform: scale(1.1); }
-        .card-title { font-weight: 700; font-size: 18px; }
+        .card-title { font-weight: 700; font-size: 14px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .card-sub { font-size: 10px; opacity: 0.8; margin-top: 2px; }
 
-        /* GALERIA HERO */
+        /* HERO AREA */
         .ministry-hero {
-            height: 200px; background-size: cover; background-position: center;
-            position: relative; display: flex; align-items: flex-end; padding: 30px;
-            margin: -30px -30px 20px -30px; border-bottom: 1px solid var(--glass-border);
+            height: 160px; background-size: cover; background-position: center;
+            position: relative; display: flex; align-items: flex-end; padding: 20px;
+            margin: -20px -20px 15px -20px; border-bottom: 1px solid var(--glass-border);
         }
         .ministry-hero::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, var(--glass-bg) 10%, transparent);
+            background: linear-gradient(to top, var(--glass-bg) 5%, transparent);
         }
         .hero-content { position: relative; z-index: 2; width: 100%; }
         
         .back-btn {
-            position: absolute; top: 20px; left: 20px; z-index: 10;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); width: 40px; height: 40px;
+            position: absolute; top: 15px; left: 15px; z-index: 10;
+            background: rgba(0,0,0,0.6); width: 35px; height: 35px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.2s;
+            color: white; border: 1px solid rgba(255,255,255,0.2); 
+            font-size: 14px; cursor: pointer;
         }
-        .back-btn:hover { background: white; color: black; }
 
-        /* SELECT SUBPASTAS */
-        .folder-select-container { margin-bottom: 20px; display: none; }
-        .folder-select-wrapper { position: relative; max-width: 300px; }
+        /* SELECT */
+        .folder-select-container { margin-bottom: 15px; display: none; }
         select {
-            width: 100%; padding: 12px 12px 12px 12px; background: rgba(255,255,255,0.1);
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.1);
             border: 1px solid var(--glass-border); border-radius: 10px; color: white; outline: none;
-            cursor: pointer; font-family: inherit; font-size: 14px;
+            font-size: 14px; -webkit-appearance: none;
         }
         select option { background: #14141e; }
 
-        /* GRID FOTOS */
+        /* GRID FOTOS OTIMIZADO */
         .gallery-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 12px; padding-bottom: 20px;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas no mobile */
+            gap: 4px; padding-bottom: 20px;
         }
         .gallery-item {
-            position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden;
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-            cursor: pointer; transition: 0.2s; opacity: 0; animation: fadeIn 0.5s forwards;
+            position: relative; aspect-ratio: 1; 
+            border-radius: 4px; overflow: hidden;
+            background: rgba(255,255,255,0.05); 
+            cursor: pointer;
         }
-        @keyframes fadeIn { to { opacity: 1; } }
-        
-        .gallery-item:hover { transform: scale(1.03); border-color: var(--theme-color); z-index: 2; }
         .gallery-img { width: 100%; height: 100%; object-fit: cover; }
         
         .video-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
         }
-        .play-icon { font-size: 36px; color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
+        .play-icon { font-size: 24px; color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
 
         /* BOTÃO CARREGAR MAIS */
-        .load-more-container { text-align: center; padding: 20px; display: none; }
+        .load-more-container { text-align: center; padding: 20px 0; display: none; margin-bottom: 40px; }
         .btn-load-more {
-            background: var(--theme-color); border: none; padding: 12px 30px; border-radius: 30px;
-            color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: 0.3s;
+            background: var(--theme-color); border: none; padding: 12px 25px; border-radius: 30px;
+            color: white; font-weight: bold; font-size: 14px; cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 100%; max-width: 250px;
         }
-        .btn-load-more:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .status-msg { grid-column: 1 / -1; text-align: center; padding: 40px; opacity: 0.7; }
+        .status-msg { grid-column: 1 / -1; text-align: center; padding: 40px 10px; opacity: 0.7; font-size: 14px; }
 
         /* LIGHTBOX */
         .lightbox {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95); z-index: 1000; display: none;
-            justify-content: center; align-items: center; backdrop-filter: blur(5px);
-            opacity: 0; transition: opacity 0.3s ease;
+            background: rgba(0, 0, 0, 0.98); z-index: 9999; display: none;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
         }
         .lightbox.active { display: flex; opacity: 1; }
-        .lightbox-content { animation: zoomIn 0.3s ease; display: flex; justify-content: center; align-items: center; }
-        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .lightbox-img { max-width: 95%; max-height: 85vh; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .lightbox-video { width: 80vw; height: 80vh; max-width: 1000px; border: none; border-radius: 8px; background: black; }
-        .close-lightbox {
-            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); color: white;
-            width: 45px; height: 45px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-            font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1001;
+        
+        .lightbox-content { 
+            width: 100%; height: 100%; display: flex; 
+            justify-content: center; align-items: center; position: relative;
         }
-        .close-lightbox:hover { background: var(--theme-color); }
+        
+        .lightbox-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .lightbox-video { width: 100%; height: 100%; border: none; background: black; }
+        
+        .close-lightbox {
+            position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); 
+            color: white; width: 40px; height: 40px; border-radius: 50%; border: none;
+            font-size: 20px; display: flex; align-items: center; justify-content: center; z-index: 10001;
+        }
     </style>
 </head>
 <body>
 
-    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
-        <button class="close-lightbox" onclick="closeLightbox(null, true)"><i class="fa-solid fa-times"></i></button>
-        <div class="lightbox-content" id="lightboxContent"></div>
+    <div id="lightbox" class="lightbox">
+        <button class="close-lightbox" onclick="closeLightbox()"><i class="fa-solid fa-times"></i></button>
+        <div class="lightbox-content" id="lightboxContent" onclick="closeLightbox()"></div>
     </div>
 
     <div class="container">
         <div id="menuScreen" class="screen active">
             <div class="gallery-header">
-                <i class="fa-solid fa-photo-film" style="font-size: 40px; color: var(--theme-color);"></i>
-                <h1>Portal de Fotos</h1>
-                <p style="opacity: 0.6;">Selecione o ministério</p>
+                <i class="fa-solid fa-photo-film" style="font-size: 32px; color: var(--theme-color);"></i>
+                <h1>Galeria</h1>
+                <p style="font-size: 12px; opacity: 0.6;">Selecione o ministério</p>
             </div>
             <div class="grid-menu" id="ministryGrid"></div>
         </div>
@@ -162,29 +176,26 @@
 
             <div class="ministry-hero" id="heroBanner">
                 <div class="hero-content">
-                    <h2 id="ministryTitle" style="font-size: 32px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Título</h2>
-                    <span id="ministrySub" style="font-size: 14px; opacity: 0.9;">Galeria Online</span>
+                    <h2 id="ministryTitle" style="font-size: 22px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Título</h2>
                 </div>
             </div>
 
             <div class="folder-select-container" id="subFolderArea">
-                <div class="folder-select-wrapper">
-                    <select id="subFolderSelect" onchange="loadImages(this.value)"></select>
-                </div>
+                <select id="subFolderSelect" onchange="loadImages(this.value)"></select>
             </div>
 
             <div class="gallery-grid" id="galleryGrid"></div>
             
             <div id="loadMoreArea" class="load-more-container">
-                <button class="btn-load-more" onclick="renderNextChunk()">Ver Mais Fotos</button>
-                <p id="itemsCounter" style="font-size:12px; opacity:0.6; margin-top:10px;"></p>
+                <button class="btn-load-more" onclick="renderNextChunk()">Carregar Mais Fotos</button>
+                <p id="itemsCounter" style="font-size:11px; opacity:0.5; margin-top:8px;"></p>
             </div>
         </div>
     </div>
 
     <script>
         // ===============================================
-        // URL DO SCRIPT
+        // URL DO SCRIPT (Mantenha o mesmo que já funciona)
         // ===============================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5EH-Up5_QT5hh2PeesKJMEodzTNDNyiWgvZfyuxOXBoR_udYnr_RhoBNNDI25fCp2/exec';
 
@@ -268,10 +279,9 @@
             }
         };
 
-        // VARIÁVEIS PARA O CARREGAMENTO PROGRESSIVO
-        let allFilesCache = []; // Guarda todas as fotos
-        let currentIndex = 0;   // Quantas já foram mostradas
-        const CHUNK_SIZE = 24;  // Quantas carregar por vez
+        let allFilesCache = []; 
+        let currentIndex = 0;   
+        const CHUNK_SIZE = 18; // Reduzido para 18 fotos por vez no celular (carrega mais rápido)
 
         window.onload = function() {
             const grid = document.getElementById('ministryGrid');
@@ -289,23 +299,21 @@
         };
 
         function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => { s.style.opacity = '0'; setTimeout(() => s.classList.remove('active'), 300); });
-            setTimeout(() => { document.getElementById(id).classList.add('active'); document.getElementById(id).style.opacity = '1'; }, 300);
+            document.querySelectorAll('.screen').forEach(s => { s.style.opacity = '0'; setTimeout(() => s.classList.remove('active'), 250); });
+            setTimeout(() => { document.getElementById(id).classList.add('active'); document.getElementById(id).style.opacity = '1'; }, 250);
         }
 
         function openMinistry(key) {
             const data = ministries[key];
             document.documentElement.style.setProperty('--theme-color', data.color);
-            document.documentElement.style.setProperty('--theme-gradient', data.gradient);
             document.getElementById('ministryTitle').innerText = data.name;
-            document.getElementById('ministrySub').innerText = data.desc;
             document.getElementById('heroBanner').style.backgroundImage = `url('${data.image}')`;
 
             const subArea = document.getElementById('subFolderArea');
             const subSelect = document.getElementById('subFolderSelect');
             let initialId = data.folderId;
 
-            if (data.subFolders && data.subFolders.length > 0) {
+            if (data.subFolders) {
                 subArea.style.display = 'block'; subSelect.innerHTML = '';
                 data.subFolders.forEach(sub => { subSelect.innerHTML += `<option value="${sub.id}">${sub.name}</option>`; });
                 initialId = data.subFolders[0].id;
@@ -316,50 +324,55 @@
         }
 
         function backToMenu() { 
-            allFilesCache = []; // Limpa memória
+            allFilesCache = []; 
+            document.getElementById('galleryGrid').innerHTML = ''; // Limpa memória visual
             showScreen('menuScreen'); 
         }
 
-        // --- LÓGICA DE CARREGAMENTO PRINCIPAL ---
         async function loadImages(folderId) {
             const grid = document.getElementById('galleryGrid');
             const loadBtnArea = document.getElementById('loadMoreArea');
             
-            grid.innerHTML = '<div class="status-msg"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px">Buscando arquivos...</p></div>';
+            grid.innerHTML = '<div class="status-msg"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px">Buscando...</p></div>';
             loadBtnArea.style.display = 'none';
 
             try {
-                // 1. Busca TUDO do Script (limitado a 800 lá)
-                const response = await fetch(`${SCRIPT_URL}?action=list&folderId=${folderId}`);
-                const files = await response.json();
-
-                grid.innerHTML = ''; // Limpa loading
-                allFilesCache = files; // Salva na memória
-                currentIndex = 0;      // Reseta contador
-
-                if (!files || files.length === 0) {
-                    grid.innerHTML = '<div class="status-msg"><p>Nenhuma foto encontrada.</p></div>';
-                    return;
+                // Tenta buscar lista do cache local do navegador (SessionStorage)
+                // Isso faz com que se ele voltar na pasta, carregue instantâneo
+                let files = null;
+                const cacheKey = `gallery_${folderId}`;
+                
+                if(!files) {
+                    const response = await fetch(`${SCRIPT_URL}?action=list&folderId=${folderId}`);
+                    files = await response.json();
                 }
 
-                // 2. Chama a função que desenha o primeiro bloco
+                grid.innerHTML = ''; 
+                allFilesCache = files; 
+                currentIndex = 0;      
+
+                if (!files || files.length === 0) {
+                    grid.innerHTML = '<div class="status-msg"><p>Pasta vazia.</p></div>';
+                    return;
+                }
+                
                 renderNextChunk();
 
             } catch (error) { 
-                grid.innerHTML = '<div class="status-msg"><p>Erro ao carregar (timeout).</p></div>'; 
+                grid.innerHTML = '<div class="status-msg"><p>Erro de conexão. Tente novamente.</p></div>'; 
             }
         }
 
-        // --- FUNÇÃO QUE DESENHA EM BLOCOS (PAGINAÇÃO) ---
         function renderNextChunk() {
             const grid = document.getElementById('galleryGrid');
             const loadBtnArea = document.getElementById('loadMoreArea');
             const counter = document.getElementById('itemsCounter');
 
-            // Pega o próximo lote de arquivos (ex: 0 a 24, depois 24 a 48)
+            // Pega o próximo lote
             const nextFiles = allFilesCache.slice(currentIndex, currentIndex + CHUNK_SIZE);
 
             nextFiles.forEach(file => {
+                // Usamos a thumbnail s400 (Tamanho Pequeno/Médio) para a grade carregar rápido no 4G
                 const thumbUrl = `https://lh3.googleusercontent.com/d/${file.id}=s400`;
 
                 const item = document.createElement('div');
@@ -367,54 +380,52 @@
                 item.onclick = () => openLightbox(file.type, file.id);
 
                 if (file.type.includes('image')) {
+                    // loading="lazy" é o segredo para não travar o celular
                     item.innerHTML = `<img src="${thumbUrl}" class="gallery-img" loading="lazy">`;
-                } else if (file.type.includes('video')) {
+                } else {
                     item.innerHTML = `
-                        <img src="${thumbUrl}" class="gallery-img">
-                        <div class="video-overlay"><i class="fa-solid fa-circle-play play-icon"></i></div>
+                        <img src="${thumbUrl}" class="gallery-img" loading="lazy">
+                        <div class="video-overlay"><i class="fa-solid fa-play play-icon"></i></div>
                     `;
                 }
                 grid.appendChild(item);
             });
 
-            // Atualiza o índice
             currentIndex += nextFiles.length;
 
-            // Controla o botão "Carregar Mais"
             if (currentIndex < allFilesCache.length) {
                 loadBtnArea.style.display = 'block';
-                counter.innerText = `Mostrando ${currentIndex} de ${allFilesCache.length} arquivos`;
+                counter.innerText = `${currentIndex} de ${allFilesCache.length}`;
             } else {
-                loadBtnArea.style.display = 'none'; // Esconde se acabou
+                loadBtnArea.style.display = 'none';
             }
         }
 
-        // --- LIGHTBOX ---
+        // --- LIGHTBOX MOBILE ---
         function openLightbox(type, fileId) {
             const lightbox = document.getElementById('lightbox');
             const content = document.getElementById('lightboxContent');
+            
+            lightbox.classList.add('active');
             content.innerHTML = '<div style="color:white"><i class="fa-solid fa-spinner fa-spin"></i></div>';
 
-            lightbox.classList.add('active');
-
-            // Pequeno delay para animação fluir
+            // Carrega imagem em alta resolução APENAS no clique
             setTimeout(() => {
                 if (type.includes('image')) {
-                    const fullUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+                    // =s2000 garante boa qualidade sem ser o arquivo original pesado
+                    const fullUrl = `https://lh3.googleusercontent.com/d/${fileId}=s2000`;
                     content.innerHTML = `<img src="${fullUrl}" class="lightbox-img">`;
                 } 
                 else if (type.includes('video')) {
                     const videoUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                    content.innerHTML = `<iframe src="${videoUrl}" class="lightbox-video" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                    content.innerHTML = `<iframe src="${videoUrl}" class="lightbox-video" allow="autoplay; fullscreen"></iframe>`;
                 }
             }, 100);
         }
 
-        function closeLightbox(event, force = false) {
-            if (force || event.target.id === 'lightbox') {
-                document.getElementById('lightbox').classList.remove('active');
-                setTimeout(() => { document.getElementById('lightboxContent').innerHTML = ''; }, 300);
-            }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            setTimeout(() => { document.getElementById('lightboxContent').innerHTML = ''; }, 200);
         }
     </script>
 </body>

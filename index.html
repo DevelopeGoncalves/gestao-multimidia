@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Mídias | Ministérios</title>
+    <title>Admin | Gestão de Mídias</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Variáveis que mudam conforme o ministério */
             --theme-color: #00d2ff; 
             --theme-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-            
-            /* Variáveis fixas */
             --glass-bg: rgba(20, 20, 30, 0.75);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
+            --danger-color: #ff4757;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,161 +22,98 @@
         body {
             font-family: 'Outfit', sans-serif;
             background-color: #0f172a;
-            /* CONFIGURAÇÃO DA IMAGEM DE FUNDO GERAL (LOCAL) */
             background-image: url('img/fundo.jpg'); 
-            /* Fallback caso a imagem não exista */
             background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('img/fundo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: var(--text-primary); min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .container {
-            width: 95%;
-            max-width: 550px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
+            width: 95%; max-width: 600px;
+            background: var(--glass-bg); backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border: 1px solid var(--glass-border); border-radius: 24px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            overflow: hidden; position: relative; min-height: 500px;
         }
 
-        /* Animações de Tela */
         .screen { display: none; opacity: 0; transition: opacity 0.4s ease; padding: 30px; }
         .screen.active { display: block; opacity: 1; }
 
-        /* --- LOGIN --- */
-        .login-header { text-align: center; margin-bottom: 30px; }
-        .login-header h1 { font-size: 26px; font-weight: 700; margin-top: 10px; }
-
+        /* INPUTS */
         .input-group { margin-bottom: 15px; position: relative; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); }
-        
         input, select {
             width: 100%; padding: 14px 14px 14px 45px;
             background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             border-radius: 12px; color: white; outline: none; transition: 0.3s;
-            font-family: inherit; font-size: 14px;
-        }
-        input:focus, select:focus { border-color: var(--theme-color); background: rgba(255,255,255,0.1); }
-        
-        /* Estilo específico para o select ficar bonito */
-        select {
-            appearance: none; -webkit-appearance: none; cursor: pointer;
+            font-family: inherit; font-size: 14px; -webkit-appearance: none;
         }
         select option { background: #14141e; color: white; }
 
-        /* --- BOTÕES --- */
+        /* BOTÕES */
         .btn {
-            width: 100%; padding: 14px; border: none; border-radius: 12px;
-            font-weight: 600; cursor: pointer; transition: 0.3s;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-            font-size: 15px;
+            width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 15px; transition: 0.3s;
         }
-        .btn-primary {
-            background: var(--theme-gradient); color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-primary { background: var(--theme-gradient); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .btn-danger { background: var(--danger-color); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        /* --- MENU DE MINISTÉRIOS --- */
+        /* MENUS E CARDS */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        
         .card-menu {
-            height: 160px;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
+            height: 140px; border-radius: 16px; position: relative; overflow: hidden;
+            cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s;
         }
-
-        .card-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            transition: transform 0.5s ease;
-        }
-
+        .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.5s; }
         .card-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.2));
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 15px;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 15px;
         }
-
-        .card-menu:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.5); }
         .card-menu:hover .card-bg { transform: scale(1.1); }
         
-        .card-title { font-weight: 700; font-size: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .card-sub { font-size: 11px; opacity: 0.8; }
-
-        /* --- TELA DE UPLOAD --- */
-        #uploadScreen { padding: 0; } 
-
-        .ministry-hero {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex; align-items: flex-end; padding: 20px 30px;
-        }
+        /* HEADER E VOLTAR */
+        .back-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; margin-bottom: 20px; }
         
-        .ministry-hero::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, var(--glass-bg) 5%, transparent);
+        /* BOTÕES DE ESCOLHA (UPLOAD/GERENCIAR) */
+        .action-choice {
+            background: rgba(255,255,255,0.05); padding: 25px; border-radius: 16px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 20px; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s;
         }
+        .action-choice:hover { background: rgba(255,255,255,0.1); border-color: var(--theme-color); }
+        .action-icon { font-size: 30px; color: var(--theme-color); width: 40px; text-align: center; }
 
-        .hero-content { position: relative; z-index: 2; width: 100%; }
-        
-        .back-btn {
-            position: absolute; top: 20px; left: 20px; z-index: 10;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
-            width: 35px; height: 35px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; border: none; cursor: pointer; transition: 0.2s;
-        }
-        .back-btn:hover { background: white; color: black; }
-
-        /* Área de subpastas */
-        #subFolderArea { padding: 20px 30px 0 30px; display: none; }
-        
-        .upload-content-body { padding: 30px; }
-
+        /* UPLOAD AREA */
         .upload-zone {
-            border: 2px dashed rgba(255,255,255,0.2); border-radius: 16px;
-            padding: 30px 20px; text-align: center;
-            background: rgba(255,255,255,0.02); cursor: pointer; transition: 0.3s;
+            border: 2px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 30px;
+            text-align: center; cursor: pointer; transition: 0.3s;
         }
         .upload-zone:hover { border-color: var(--theme-color); background: rgba(255,255,255,0.05); }
 
-        /* Lista de Arquivos */
-        .file-list { margin-top: 15px; max-height: 200px; overflow-y: auto; }
-        .file-item {
-            display: flex; align-items: center; padding: 10px;
-            background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 8px;
-            font-size: 13px; border-left: 3px solid var(--theme-color);
+        /* GERENCIAR GRID */
+        .manage-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px; max-height: 350px; overflow-y: auto; padding-bottom: 60px;
         }
-        .f-remove { margin-left: auto; color: #ff5555; cursor: pointer; padding: 5px; }
-
-        /* Progresso */
-        .progress-container { margin-top: 15px; display: none; }
-        .progress-bar-bg { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: var(--theme-gradient); transition: width 0.2s; }
-
-        @media (max-width: 480px) {
-            .grid-menu { grid-template-columns: 1fr; }
+        .manage-item {
+            position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
+            border: 2px solid transparent; cursor: pointer; background: rgba(255,255,255,0.05);
         }
+        .manage-item img { width: 100%; height: 100%; object-fit: cover; }
+        .manage-item.selected { border-color: var(--danger-color); opacity: 0.7; }
+        .manage-item.selected::after {
+            content: '\f1f8'; font-family: "Font Awesome 6 Free"; font-weight: 900;
+            position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            color: var(--danger-color); font-size: 24px; background: rgba(0,0,0,0.8); padding: 8px; border-radius: 50%;
+        }
+        .float-delete {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 80%;
+            z-index: 10; display: none; animation: popUp 0.3s;
+        }
+        @keyframes popUp { from {transform: translate(-50%, 20px); opacity:0} to {transform: translate(-50%, 0); opacity:1} }
     </style>
 </head>
 <body>
@@ -187,12 +121,10 @@
     <div class="container">
         
         <div id="loginScreen" class="screen active">
-            <div class="login-header">
-                <i class="fa-solid fa-cloud" style="font-size: 40px; color: #00d2ff;"></i>
-                <h1>Gestão de Mídias</h1>
-                <p style="opacity: 0.6;">Acesso Administrativo</p>
+            <div style="text-align:center; margin-bottom:30px;">
+                <i class="fa-solid fa-user-shield" style="font-size: 40px; color: #00d2ff;"></i>
+                <h1 style="font-size:24px; margin-top:10px;">Acesso Admin</h1>
             </div>
-            
             <div class="input-group">
                 <i class="fa-solid fa-user"></i>
                 <input type="text" id="username" placeholder="Usuário">
@@ -201,80 +133,81 @@
                 <i class="fa-solid fa-lock"></i>
                 <input type="password" id="password" placeholder="Senha">
             </div>
-
             <button class="btn btn-primary" onclick="login()">Entrar</button>
         </div>
 
         <div id="selectScreen" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="font-size: 20px;">Selecione o Ministério</h2>
-                <button onclick="logout()" style="background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px;">Sair</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h2>Ministérios</h2>
+                <button onclick="location.reload()" style="background:none; border:none; color:#aaa; cursor:pointer;">Sair</button>
+            </div>
+            <div class="grid-menu" id="ministryGrid"></div>
+        </div>
+
+        <div id="choiceScreen" class="screen">
+            <button class="back-btn" onclick="showScreen('selectScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 style="margin-bottom:20px;">O que deseja fazer?</h2>
+            
+            <div class="action-choice" onclick="goToUpload()">
+                <div class="action-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <div>
+                    <h3>Fazer Upload</h3>
+                    <p style="font-size:12px; opacity:0.7">Enviar novas fotos ou vídeos</p>
+                </div>
             </div>
 
-            <div class="grid-menu" id="ministryGrid">
+            <div class="action-choice" onclick="goToManage()">
+                <div class="action-icon"><i class="fa-solid fa-trash-can"></i></div>
+                <div>
+                    <h3>Gerenciar</h3>
+                    <p style="font-size:12px; opacity:0.7">Visualizar pasta e apagar arquivos</p>
                 </div>
+            </div>
         </div>
 
         <div id="uploadScreen" class="screen">
-            <button class="back-btn" onclick="backToSelect()"><i class="fa-solid fa-arrow-left"></i></button>
+            <button class="back-btn" onclick="showScreen('choiceScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h3 style="margin-bottom:15px;">Upload: <span class="ministry-name"></span></h3>
 
-            <div class="ministry-hero" id="heroBanner">
-                <div class="hero-content">
-                    <h2 id="ministryTitle" style="font-size: 28px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Título</h2>
-                    <span id="ministrySub" style="font-size: 13px; opacity: 0.9;">Descrição</span>
-                </div>
+            <div class="input-group" id="uploadSubArea">
+                <i class="fa-solid fa-folder"></i>
+                <select id="uploadSubSelect" onchange="currentFolderId = this.value"></select>
             </div>
 
-            <div id="subFolderArea">
-                <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: block;">Destino do Arquivo:</label>
-                <div class="input-group" style="margin-bottom: 0;">
-                    <i class="fa-solid fa-folder-open"></i>
-                    <select id="subFolderSelect" onchange="updateTargetFolder(this.value)">
-                        </select>
-                    <i class="fa-solid fa-chevron-down" style="left: auto; right: 15px; font-size: 12px;"></i>
-                </div>
+            <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size:30px; margin-bottom:10px;"></i>
+                <p>Toque para selecionar arquivos</p>
+                <input type="file" id="fileInput" multiple style="display:none">
             </div>
-
-            <div class="upload-content-body">
-                <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 32px; margin-bottom: 10px; color: var(--theme-color);"></i>
-                    <p style="font-weight: 600;">Adicionar Fotos ou Vídeos</p>
-                    <p style="font-size: 11px; opacity: 0.6; margin-top: 5px;">Múltiplos arquivos permitidos</p>
-                    <input type="file" id="fileInput" multiple accept="image/*,video/*,.zip,.rar" style="display: none;">
-                </div>
-
-                <div class="file-list" id="fileList"></div>
-
-                <div class="progress-container" id="progressContainer">
-                    <div style="display:flex; justify-content:space-between; font-size: 11px; margin-bottom: 5px;">
-                        <span id="progressText">Enviando...</span>
-                        <span id="progressPercent">0%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-fill" id="progressBar"></div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" id="uploadBtn" onclick="uploadFiles()" style="margin-top: 20px; display: none;">
-                    Enviar Arquivos
-                </button>
-            </div>
+            <div id="fileList" style="margin:15px 0; font-size:13px; max-height:100px; overflow-y:auto;"></div>
+            <button class="btn btn-primary" id="uploadBtn" style="display:none" onclick="uploadFiles()">Enviar Arquivos</button>
         </div>
+
+        <div id="manageScreen" class="screen">
+            <button class="back-btn" onclick="showScreen('choiceScreen')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h3 style="margin-bottom:5px;">Gerenciar: <span class="ministry-name"></span></h3>
+            <p style="font-size:12px; opacity:0.6; margin-bottom:15px;">Selecione os itens para apagar.</p>
+
+            <div class="input-group" id="manageSubArea" style="margin-bottom:15px;">
+                <i class="fa-solid fa-folder-open"></i>
+                <select id="manageSubSelect" onchange="loadManageImages(this.value)"></select>
+            </div>
+
+            <div class="manage-grid" id="manageGrid"></div>
+
+            <button class="btn btn-danger float-delete" id="deleteBtn" onclick="deleteSelected()">
+                Apagar (<span id="countSpan">0</span>)
+            </button>
+        </div>
+
     </div>
 
     <script>
-        // ==========================================
-        // CONFIGURAÇÃO DO GOOGLE APPS SCRIPT
-        // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzDqobilxU7_IcVGUM8lT-WUmKZIxSA5LPpHkHn2FQLBCXJpef7b6hMm89Kdprq2-B/exec';
+        // ===============================================
+        // COLOQUE A URL DO SCRIPT ATUALIZADO AQUI
+        // ===============================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVoxOPDl-xWoMFnT0MOIQqdJszyki7xAuVrQozrQ4_AwkD8HMrIpmMCC1vgw3bTf4_/exec';
 
-        // ==========================================
-        // CONFIGURAÇÃO DOS MINISTÉRIOS
-        // ==========================================
-        /* COMO ADICIONAR SUBPASTAS:
-           Adicione uma propriedade 'subFolders' com a lista de pastas.
-           Se 'subFolders' não existir, o sistema usa o 'folderId' padrão.
-        */
         const ministries = {
             'vencedores': { 
                 name: 'Vencedores', 
@@ -355,195 +288,160 @@
             }
         };
 
-        let selectedFiles = [];
         let currentKey = '';
-        let currentUploadFolderId = '';
+        let currentFolderId = '';
+        let selectedFiles = []; // Upload
+        let filesToDelete = new Set(); // Delete
 
-        // Inicializar Menu
-        window.onload = function() { renderMinistryGrid(); };
-
-        function renderMinistryGrid() {
-            const grid = document.getElementById('ministryGrid');
-            grid.innerHTML = '';
-            for (const [key, data] of Object.entries(ministries)) {
-                grid.innerHTML += `
-                    <div class="card-menu" onclick="selectMinistry('${key}')">
-                        <div class="card-bg" style="background-image: url('${data.image}')"></div>
-                        <div class="card-overlay">
-                            <div class="card-title">${data.name}</div>
-                            <div class="card-sub">${data.desc}</div>
-                        </div>
-                    </div>
-                `;
-            }
+        // LOGIN
+        function login() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if(u === 'admin' && p === 'admin123') { // <-- SENHA AQUI
+                renderMenu(); showScreen('selectScreen');
+            } else alert('Acesso Negado');
         }
 
-        // Navegação
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             setTimeout(() => document.getElementById(id).classList.add('active'), 50);
         }
 
-        function login() {
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            if(u === 'admin' && p === 'admin123') showScreen('selectScreen');
-            else alert('Dados incorretos!');
-        }
-
-        function logout() {
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            showScreen('loginScreen');
+        // RENDER MENU
+        function renderMenu() {
+            const grid = document.getElementById('ministryGrid'); grid.innerHTML = '';
+            for(const [key, data] of Object.entries(ministries)) {
+                grid.innerHTML += `
+                    <div class="card-menu" onclick="selectMinistry('${key}')">
+                        <div class="card-bg" style="background-image:url('${data.image}')"></div>
+                        <div class="card-overlay"><div style="color:white; font-weight:700">${data.name}</div></div>
+                    </div>`;
+            }
         }
 
         function selectMinistry(key) {
             currentKey = key;
             const data = ministries[key];
+            document.documentElement.style.setProperty('--theme-color', data.color);
+            document.documentElement.style.setProperty('--theme-gradient', data.gradient);
+            document.querySelectorAll('.ministry-name').forEach(e => e.innerText = data.name);
+            showScreen('choiceScreen');
+        }
 
-            // Cores e Imagem
-            const root = document.documentElement;
-            root.style.setProperty('--theme-color', data.color);
-            root.style.setProperty('--theme-gradient', data.gradient);
+        // --- SUBPASTAS ---
+        function setupSubfolders(type) {
+            const data = ministries[currentKey];
+            const area = document.getElementById(type + 'SubArea');
+            const select = document.getElementById(type + 'SubSelect');
             
-            document.getElementById('heroBanner').style.backgroundImage = `url('${data.image}')`;
-            document.getElementById('ministryTitle').innerText = data.name;
-            document.getElementById('ministrySub').innerText = data.desc;
-
-            // --- LÓGICA DE SUBPASTAS ---
-            const subArea = document.getElementById('subFolderArea');
-            const subSelect = document.getElementById('subFolderSelect');
-
-            // Verifica se este ministério tem subpastas configuradas
-            if (data.subFolders && data.subFolders.length > 0) {
-                // Sim: Mostra o seletor
-                subArea.style.display = 'block';
-                subSelect.innerHTML = ''; 
-                
-                data.subFolders.forEach(sub => {
-                    const option = document.createElement('option');
-                    option.value = sub.id;
-                    option.text = sub.name;
-                    subSelect.appendChild(option);
-                });
-                // Define o destino inicial como a primeira opção
-                currentUploadFolderId = data.subFolders[0].id;
+            if (data.subFolders) {
+                area.style.display = 'block'; select.innerHTML = '';
+                data.subFolders.forEach(sub => select.innerHTML += `<option value="${sub.id}">${sub.name}</option>`);
+                currentFolderId = data.subFolders[0].id;
             } else {
-                // Não: Esconde o seletor e usa o ID padrão
-                subArea.style.display = 'none';
-                currentUploadFolderId = data.folderId;
+                area.style.display = 'none';
+                currentFolderId = data.folderId;
             }
+            return currentFolderId;
+        }
 
-            selectedFiles = [];
-            updateFileList();
+        // --- UPLOAD ---
+        function goToUpload() {
+            setupSubfolders('upload');
+            selectedFiles = []; document.getElementById('fileList').innerHTML = '';
             showScreen('uploadScreen');
         }
 
-        // Atualiza o ID quando o usuário muda o dropdown
-        function updateTargetFolder(newId) {
-            currentUploadFolderId = newId;
-        }
-
-        function backToSelect() {
-            showScreen('selectScreen');
-            setTimeout(() => {
-                document.documentElement.style.setProperty('--theme-color', '#00d2ff');
-                document.documentElement.style.setProperty('--theme-gradient', 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)');
-            }, 300);
-        }
-
-        // Arquivos
-        const fileInput = document.getElementById('fileInput');
-        fileInput.addEventListener('change', (e) => {
-            selectedFiles = [...selectedFiles, ...e.target.files];
-            updateFileList();
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            selectedFiles = [...e.target.files];
+            let html = '';
+            selectedFiles.forEach(f => html += `<div><i class="fa-solid fa-file"></i> ${f.name}</div>`);
+            document.getElementById('fileList').innerHTML = html;
+            document.getElementById('uploadBtn').style.display = selectedFiles.length ? 'block' : 'none';
         });
 
-        function updateFileList() {
-            const list = document.getElementById('fileList');
-            const btn = document.getElementById('uploadBtn');
-            list.innerHTML = '';
-
-            if(selectedFiles.length > 0) {
-                btn.style.display = 'block';
-                selectedFiles.forEach((f, i) => {
-                    list.innerHTML += `
-                        <div class="file-item">
-                            <div style="margin-right:10px;"><i class="fa-solid fa-file"></i></div>
-                            <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${f.name}</div>
-                            <div class="f-remove" onclick="removeFile(${i})"><i class="fa-solid fa-times"></i></div>
-                        </div>
-                    `;
-                });
-            } else {
-                btn.style.display = 'none';
-            }
-        }
-
-        function removeFile(i) {
-            selectedFiles.splice(i, 1);
-            updateFileList();
-        }
-
-        // Upload
         async function uploadFiles() {
-            if(SCRIPT_URL.includes('COLE_A_URL')) { alert('ERRO: Configure a URL do Google Script no código!'); return; }
+            const btn = document.getElementById('uploadBtn'); btn.innerText = 'Enviando...';
             
-            const btn = document.getElementById('uploadBtn');
-            const pContainer = document.getElementById('progressContainer');
-            const pFill = document.getElementById('progressBar');
-            const pText = document.getElementById('progressText');
-            const pPerc = document.getElementById('progressPercent');
-
-            btn.style.display = 'none';
-            pContainer.style.display = 'block';
-
-            let successCount = 0;
-            const folderId = currentUploadFolderId; // Usa o ID definido dinamicamente
-
-            for(let i=0; i<selectedFiles.length; i++) {
-                const file = selectedFiles[i];
-                pText.innerText = `Enviando ${i+1}/${selectedFiles.length}: ${file.name}`;
-                
-                try {
-                    const base64 = await getBase64(file);
-                    await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            fileName: file.name,
-                            mimeType: file.type,
-                            data: base64.split(',')[1],
-                            folderId: folderId
-                        })
-                    });
-                    
-                    successCount++;
-                    const pct = Math.round(((i+1)/selectedFiles.length)*100);
-                    pFill.style.width = pct + '%';
-                    pPerc.innerText = pct + '%';
-                    
-                } catch(e) { console.error(e); }
+            for(const file of selectedFiles) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                await new Promise(resolve => {
+                    reader.onload = async () => {
+                        await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                folderId: currentFolderId,
+                                fileName: file.name,
+                                mimeType: file.type,
+                                data: reader.result.split(',')[1]
+                            })
+                        });
+                        resolve();
+                    };
+                });
             }
-
-            if(successCount > 0) {
-                alert('Todos os arquivos foram enviados com sucesso!');
-                selectedFiles = [];
-                updateFileList();
-                pContainer.style.display = 'none';
-                pFill.style.width = '0%';
-                backToSelect();
-            } else {
-                alert('Erro ao enviar. Verifique sua internet.');
-                btn.style.display = 'block';
-            }
+            alert('Upload Concluído!');
+            btn.innerText = 'Enviar Arquivos'; selectedFiles = []; document.getElementById('fileList').innerHTML = '';
+            showScreen('selectScreen');
         }
 
-        const getBase64 = file => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
+        // --- GERENCIAR / APAGAR ---
+        function goToManage() {
+            const id = setupSubfolders('manage');
+            filesToDelete.clear(); updateDeleteBtn();
+            showScreen('manageScreen');
+            loadManageImages(id);
+        }
+
+        async function loadManageImages(folderId) {
+            currentFolderId = folderId;
+            const grid = document.getElementById('manageGrid');
+            grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">Carregando...</p>';
+            
+            const res = await fetch(`${SCRIPT_URL}?action=list&folderId=${folderId}`);
+            const files = await res.json();
+            grid.innerHTML = '';
+
+            if(!files.length) { grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">Pasta Vazia</p>'; return; }
+
+            files.forEach(file => {
+                const thumbUrl = `https://lh3.googleusercontent.com/d/${file.id}=s200`;
+                const div = document.createElement('div');
+                div.className = 'manage-item';
+                div.innerHTML = `<img src="${thumbUrl}">`;
+                if(file.type.includes('video')) div.innerHTML += '<i class="fa-solid fa-video" style="position:absolute; bottom:5px; right:5px; color:white; text-shadow:0 1px 2px black;"></i>';
+                
+                div.onclick = () => {
+                    if(filesToDelete.has(file.id)) { filesToDelete.delete(file.id); div.classList.remove('selected'); }
+                    else { filesToDelete.add(file.id); div.classList.add('selected'); }
+                    updateDeleteBtn();
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function updateDeleteBtn() {
+            const btn = document.getElementById('deleteBtn');
+            const span = document.getElementById('countSpan');
+            if(filesToDelete.size > 0) {
+                btn.style.display = 'block'; span.innerText = filesToDelete.size;
+            } else btn.style.display = 'none';
+        }
+
+        async function deleteSelected() {
+            if(!confirm('Tem certeza que deseja apagar os itens selecionados?')) return;
+            const btn = document.getElementById('deleteBtn'); btn.innerText = 'Apagando...';
+            
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'delete', fileIds: Array.from(filesToDelete) })
+            });
+
+            alert('Arquivos apagados!');
+            filesToDelete.clear(); updateDeleteBtn(); btn.innerText = 'Apagar';
+            loadManageImages(currentFolderId);
+        }
     </script>
 </body>
 </html>

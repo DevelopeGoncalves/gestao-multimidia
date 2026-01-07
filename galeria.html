@@ -10,7 +10,7 @@
     <style>
         :root {
             --theme-color: #00d2ff; 
-            --glass-bg: rgba(20, 20, 30, 0.95); /* Mais escuro para celular */
+            --glass-bg: rgba(20, 20, 30, 0.95);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
         }
@@ -20,7 +20,6 @@
         body {
             font-family: 'Outfit', sans-serif;
             background-color: #0f172a;
-            /* Fundo otimizado para mobile */
             background-image: url('img/fundo.jpg'); 
             background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('img/fundo.jpg');
             background-size: cover;
@@ -30,7 +29,7 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Melhor rolagem no mobile */
+            align-items: flex-start;
             padding: 10px;
         }
 
@@ -104,7 +103,7 @@
         /* GRID FOTOS OTIMIZADO */
         .gallery-grid {
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* 3 colunas no mobile */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 4px; padding-bottom: 20px;
         }
         .gallery-item {
@@ -195,7 +194,7 @@
 
     <script>
         // ===============================================
-        // URL DO SCRIPT (Mantenha o mesmo que já funciona)
+        // URL DO SCRIPT (COLE SUA URL AQUI)
         // ===============================================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5EH-Up5_QT5hh2PeesKJMEodzTNDNyiWgvZfyuxOXBoR_udYnr_RhoBNNDI25fCp2/exec';
 
@@ -281,7 +280,7 @@
 
         let allFilesCache = []; 
         let currentIndex = 0;   
-        const CHUNK_SIZE = 18; // Reduzido para 18 fotos por vez no celular (carrega mais rápido)
+        const CHUNK_SIZE = 18; 
 
         window.onload = function() {
             const grid = document.getElementById('ministryGrid');
@@ -325,7 +324,7 @@
 
         function backToMenu() { 
             allFilesCache = []; 
-            document.getElementById('galleryGrid').innerHTML = ''; // Limpa memória visual
+            document.getElementById('galleryGrid').innerHTML = '';
             showScreen('menuScreen'); 
         }
 
@@ -337,15 +336,8 @@
             loadBtnArea.style.display = 'none';
 
             try {
-                // Tenta buscar lista do cache local do navegador (SessionStorage)
-                // Isso faz com que se ele voltar na pasta, carregue instantâneo
-                let files = null;
-                const cacheKey = `gallery_${folderId}`;
-                
-                if(!files) {
-                    const response = await fetch(`${SCRIPT_URL}?action=list&folderId=${folderId}`);
-                    files = await response.json();
-                }
+                const response = await fetch(`${SCRIPT_URL}?action=list&folderId=${folderId}`);
+                const files = await response.json();
 
                 grid.innerHTML = ''; 
                 allFilesCache = files; 
@@ -368,11 +360,11 @@
             const loadBtnArea = document.getElementById('loadMoreArea');
             const counter = document.getElementById('itemsCounter');
 
-            // Pega o próximo lote
             const nextFiles = allFilesCache.slice(currentIndex, currentIndex + CHUNK_SIZE);
 
             nextFiles.forEach(file => {
-                // Usamos a thumbnail s400 (Tamanho Pequeno/Médio) para a grade carregar rápido no 4G
+                // --- CORREÇÃO IMPORTANTE DO LINK DE IMAGEM ---
+                // Alterado para lh3.googleusercontent.com/d/ que funciona em Mobile
                 const thumbUrl = `https://lh3.googleusercontent.com/d/${file.id}=s400`;
 
                 const item = document.createElement('div');
@@ -380,7 +372,6 @@
                 item.onclick = () => openLightbox(file.type, file.id);
 
                 if (file.type.includes('image')) {
-                    // loading="lazy" é o segredo para não travar o celular
                     item.innerHTML = `<img src="${thumbUrl}" class="gallery-img" loading="lazy">`;
                 } else {
                     item.innerHTML = `
@@ -409,10 +400,9 @@
             lightbox.classList.add('active');
             content.innerHTML = '<div style="color:white"><i class="fa-solid fa-spinner fa-spin"></i></div>';
 
-            // Carrega imagem em alta resolução APENAS no clique
             setTimeout(() => {
                 if (type.includes('image')) {
-                    // =s2000 garante boa qualidade sem ser o arquivo original pesado
+                    // Carrega imagem em alta qualidade
                     const fullUrl = `https://lh3.googleusercontent.com/d/${fileId}=s2000`;
                     content.innerHTML = `<img src="${fullUrl}" class="lightbox-img">`;
                 } 
